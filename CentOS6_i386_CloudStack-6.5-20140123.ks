@@ -51,9 +51,22 @@ acpid
 cloud-set-guest-password
 # no need for cloud-set-guest-sshkey as it's obsoleted by cloud-init
 #cloud-set-guest-sshkey
+tuned
+-*-firmware
+-NetworkManager
+-b43-openfwwf
+-biosdevname
+-fprintd
+-fprintd-pam
+-gtk2
+-libfprint
+-mcelog
+-redhat-support-tool
+-system-config-*
+-wireless-tools
 %end
 
-services --enabled=network,acpid,ntpd,sshd,qemu-ga,cloud-set-guest-password
+services --enabled=network,acpid,ntpd,sshd,qemu-ga,cloud-set-guest-password,tuned
 
 # halt the machine once everything is done
 shutdown
@@ -169,4 +182,15 @@ chcon --reference /sbin/ifup /sbin/ifup-local
 # Enable the serial console login
 echo ttyS0 >> /etc/securetty
 sed -i 's@ACTIVE_CONSOLES=/dev/tty\[1-6\]@ACTIVE_CONSOLES="/dev/tty\[1-6\] /dev/ttyS0"@g' /etc/sysconfig/init
+
+#bz912801
+# prevent udev rules from remapping nics
+touch /etc/udev/rules.d/75-persistent-net-generator.rules
+
+#bz 1011013
+# set eth0 to recover from dhcp errors
+echo PERSISTENT_DHCLIENT="1" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+
+# set virtual-guest as default profile for tuned
+echo "virtual-guest" > /etc/tune-profiles/active-profile
 
