@@ -52,9 +52,6 @@ acpid
 tuned
 #do we want EPEL?
 #epel-release
-#cloud-set-guest-password
-# no need for cloud-set-guest-sshkey as it's obsoleted by cloud-init
-#cloud-set-guest-sshkey
 -*-firmware
 -NetworkManager
 -b43-openfwwf
@@ -231,10 +228,6 @@ exit 0
 EOF
 
 chmod +x /var/lib/cloud/scripts/per-boot/10_cloud-set-guest-password
-
-#mkdir -p /var/lib/cloud/scripts/per-once
-#echo "/sbin/resize2fs /dev/vda1" > /var/lib/cloud/scripts/per-once/10_resize2fs
-#chmod +x /var/lib/cloud/scripts/per-once/10_resize2fs
 
 chmod +x /sbin/ifup-local
 chcon --reference /sbin/ifup /sbin/ifup-local
